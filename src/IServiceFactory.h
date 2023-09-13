@@ -8,7 +8,7 @@
 MINIOC_BEGIN
 
 
-// Abstract representation of Service factory.
+// Abstract representation of service factory.
 class IServiceFactory
 {
 public:

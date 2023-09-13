@@ -11,7 +11,7 @@
 
 #define MINIOC_BEGIN namespace minioc {
 #define MINIOC_END   }
-#define MINIOC	      ::minioc::
+#define MINIOC	     ::minioc::
 
 
 #endif // !_MINIOC_MACROS_H_

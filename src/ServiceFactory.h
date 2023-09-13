@@ -23,10 +23,7 @@ public:
     ServiceFactory(std::function<std::shared_ptr<TService>> provider) : _provider(provider) {}
     ~ServiceFactory() override = default;
 
-    /// <summary>
-    /// Get service of specified type.
-    /// </summary>
-    /// <returns></returns>
+    // Get the service of specified type.
     std::shared_ptr<TService> GetService()
     {
         return _provider();
