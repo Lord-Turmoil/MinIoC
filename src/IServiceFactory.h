@@ -1,11 +1,11 @@
 #pragma once
 
-#ifndef _TONIOC_ISERVICE_FACTORY_H_
-#define _TONIOC_ISERVICE_FACTORY_H_
+#ifndef _MINIOC_ISERVICE_FACTORY_H_
+#define _MINIOC_ISERVICE_FACTORY_H_
 
 #include "Macros.h"
 
-_TONIOC_BEGIN
+MINIOC_BEGIN
 
 
 // Abstract representation of Service factory.
@@ -19,6 +19,6 @@ public:
 IServiceFactory::~IServiceFactory() = default;
 
 
-_TONIOC_END
+MINIOC_END
 
-#endif // !_TONIOC_ISERVICE_FACTORY_H_
+#endif // !_MINIOC_ISERVICE_FACTORY_H_

@@ -12,7 +12,7 @@ endif()
 project ("IoC")
 
 # Add source to this project's executable.
-add_executable (IoC   "src/ServiceCollection.cpp" "src/IServiceContainer.h" "src/Macros.h" "src/ServiceFactory.h" "src/IServiceFactory.h")
+add_executable (IoC "src/IServiceContainer.h" "src/Macros.h" "src/ServiceFactory.h" "src/IServiceFactory.h" "src/ServiceContainer.h" "test/Test.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET IoC PROPERTY CXX_STANDARD 20)

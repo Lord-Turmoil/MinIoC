@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef _TONIOC_SERVICE_FACTORY_H_
-#define _TONIOC_SERVICE_FACTORY_H_
+#ifndef _MINIOC_SERVICE_FACTORY_H_
+#define _MINIOC_SERVICE_FACTORY_H_
 
 #include <functional>
 #include <memory>
@@ -9,7 +9,7 @@
 #include "Macros.h"
 #include "IServiceFactory.h"
 
-_TONIOC_BEGIN
+MINIOC_BEGIN
 
 
 // ServiceFactory can provide an object of specified type.
@@ -34,6 +34,6 @@ public:
 };
 
 
-_TONIOC_END
+MINIOC_END
 
-#endif // !_TONIOC_SERVICE_FACTORY_H_
+#endif // !_MINIOC_SERVICE_FACTORY_H_

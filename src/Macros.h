@@ -2,16 +2,16 @@
 
 #pragma once
 
-#ifndef _TONIOC_MACROS_H_
-#define _TONIOC_MACROS_H_
+#ifndef _MINIOC_MACROS_H_
+#define _MINIOC_MACROS_H_
 
 
-#define TONIOC_VERSION   "1.0.0"
-#define TONIOC_PROJ_NAME "Tony's IoC"
+#define MINIOC_VERSION   "1.0.0"
+#define MINIOC_PROJ_NAME "Tony's Mini IoC"
 
-#define _TONIOC_BEGIN namespace tonioc {
-#define _TONIOC_END   }
-#define _TONIOC	      ::tonioc::
+#define MINIOC_BEGIN namespace minioc {
+#define MINIOC_END   }
+#define MINIOC	      ::minioc::
 
 
-#endif // !_TONIOC_MACROS_H_
+#endif // !_MINIOC_MACROS_H_

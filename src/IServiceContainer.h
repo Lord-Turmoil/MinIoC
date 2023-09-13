@@ -2,12 +2,12 @@
 
 #pragma once
 
-#ifndef _TONIOC_ISERVICE_CONTAINER_H_
-#define _TONIOC_ISERVICE_CONTAINER_H_
+#ifndef _MINIOC_ISERVICE_CONTAINER_H_
+#define _MINIOC_ISERVICE_CONTAINER_H_
 
 #include "Macros.h"
 
-_TONIOC_BEGIN
+MINIOC_BEGIN
 
 
 class IServiceContainer
@@ -19,6 +19,6 @@ public:
 IServiceContainer::~IServiceContainer() = default;
 
 
-_TONIOC_END
+MINIOC_END
 
-#endif // !_TONIOC_ISERVICE_CONTAINER_H_
+#endif // !_MINIOC_ISERVICE_CONTAINER_H_
