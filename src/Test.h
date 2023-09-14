@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef _MINIOC_TEST_H_
-#define _MINIOC_TEST_H_
+#ifndef _MIOC_TEST_H_
+#define _MIOC_TEST_H_
 
 #define _CRT_SECURE_NO_WARNINGS
 

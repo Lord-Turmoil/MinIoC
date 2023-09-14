@@ -1,14 +1,14 @@
 #pragma once
 
-#ifndef _MINIOC_SERVICE_FACTORY_H_
-#define _MINIOC_SERVICE_FACTORY_H_
+#ifndef _MIOC_SERVICE_FACTORY_H_
+#define _MIOC_SERVICE_FACTORY_H_
 
 #include "Macros.h"
 
 #include <functional>
 #include <memory>
 
-MINIOC_BEGIN
+MIOC_BEGIN
 // Abstract representation of service factory.
 class IServiceFactory
 {
@@ -39,6 +39,6 @@ public:
 };
 
 
-MINIOC_END
+MIOC_END
 
-#endif // !_MINIOC_SERVICE_FACTORY_H_
+#endif // !_MIOC_SERVICE_FACTORY_H_

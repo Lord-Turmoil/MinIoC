@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef _MINIOC_SERVICE_CONTAINER_H_
-#define _MINIOC_SERVICE_CONTAINER_H_
+#ifndef _MIOC_SERVICE_CONTAINER_H_
+#define _MIOC_SERVICE_CONTAINER_H_
 
 #include "Macros.h"
 #include "ServiceFactory.h"
@@ -9,7 +9,7 @@
 #include <map>
 #include <memory>
 
-MINIOC_BEGIN
+MIOC_BEGIN
 
 class ServiceContainer;
 using ServiceContainerPtr = std::shared_ptr<ServiceContainer>;
@@ -38,7 +38,7 @@ public:
     template<typename TService>
     std::shared_ptr<TService> ResolveService()
     {
-        auto typeId = _GetTypeID<TService>();
+        auto typeId = _GetTypeId<TService>();
         auto it = _services.find(typeId);
         if (it != _services.end())
         {
@@ -54,7 +54,7 @@ public:
     void RegisterSingleton(std::shared_ptr<TInterface> singleton)
     {
         // std::map::emplace will not replace old value if key already presents.
-        _services[_GetTypeID<TInterface>()] =
+        _services[_GetTypeId<TInterface>()] =
             std::make_shared<ServiceFactory<TInterface>>([=] { return singleton; });
     }
 
@@ -68,7 +68,7 @@ public:
 private:
     // Make sure one type is mapped to one id.
     template<typename TService>
-    static int _GetTypeID()
+    static int _GetTypeId()
     {
         static int typeId = _nextTypeId++;
         return typeId;
@@ -79,7 +79,7 @@ private:
     void _RegisterFunctor(std::function<std::shared_ptr<TInterface>(std::shared_ptr<TDependencies>... dependencies)> functor)
     {
         _services.emplace(
-            _GetTypeID<TInterface>(),
+            _GetTypeId<TInterface>(),
             std::make_shared<ServiceFactory<TInterface>>([=] {
                 return functor(ResolveService<TDependencies>()...);
                 })
@@ -95,6 +95,6 @@ private:
 int ServiceContainer::_nextTypeId = 75159;
 
 
-MINIOC_END
+MIOC_END
 
-#endif // !_MINIOC_SERVICE_CONTAINER_H_
+#endif // !_MIOC_SERVICE_CONTAINER_H_

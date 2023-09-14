@@ -16,7 +16,7 @@ void TestSingleton()
 {
     printf("========== TEST: Singleton ==========\n\n");
 
-    const minioc::ServiceContainerPtr container = minioc::ServiceContainer::New();
+    const mioc::ServiceContainerPtr container = mioc::ServiceContainer::New();
 
     // Register singleton with no dependency.
     container->RegisterSingleton<IA, A>();
