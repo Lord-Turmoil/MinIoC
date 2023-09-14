@@ -3,12 +3,17 @@
 #include <memory>
 #include "Test.h"
 #include "ServiceContainer.h"
+#include "SingletonContainer.h"
 
 void TestSingleton();
 void TestTransient();
 void TestTransient2();
 int main()
 {
+    const auto container = mioc::SingletonContainer::GetContainer();
+
+    container->AddSingleton<IA, A>();
+
     TestSingleton();
     TestTransient();
     TestTransient2();
@@ -19,6 +24,10 @@ int main()
 void TestSingleton()
 {
     printf("========== TEST: Singleton ==========\n\n");
+
+    const auto a = mioc::SingletonContainer::GetContainer()->Resolve<IA>();
+    printf("Global: ");
+    a->Print();
 
     const mioc::ServiceContainerPtr container = mioc::ServiceContainer::New();
 
@@ -52,6 +61,10 @@ void TestTransient()
 {
     printf("========== TEST: Transient ==========\n\n");
 
+    const auto a = mioc::SingletonContainer::GetContainer()->Resolve<IA>();
+    printf("Global: ");
+    a->Print();
+
     const mioc::ServiceContainerPtr container = mioc::ServiceContainer::New();
 
     // Register singleton that will be used by transient.
@@ -81,6 +94,10 @@ void TestTransient()
 void TestTransient2()
 {
     printf("========== TEST: Transient 2 ==========\n\n");
+
+    const auto a = mioc::SingletonContainer::GetContainer()->Resolve<IA>();
+    printf("Global: ");
+    a->Print();
 
     const mioc::ServiceContainerPtr container = mioc::ServiceContainer::New();
 
