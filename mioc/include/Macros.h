@@ -6,7 +6,7 @@
 #define _MIOC_MACROS_H_
 
 
-#define MIOC_VERSION   "1.0.0"
+#define MIOC_VERSION   "1.1.0"
 #define MIOC_PROJ_NAME "Tony's Mini IoC"
 
 #define MIOC_BEGIN namespace mioc {
