@@ -3,15 +3,24 @@
 #ifndef _MINIOC_TEST_H_
 #define _MINIOC_TEST_H_
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <cstdio>
+#include <ctime>
 #include <memory>
+#include <string>
 
 // Class interfaces.
 class IBase
 {
 public:
     virtual ~IBase() = default;
-    virtual void Print() = 0;
+
+    virtual std::string ToString() = 0;
+    virtual void Print()
+    {
+        printf("%s\n", ToString().c_str());
+    }
 };
 
 class IA : public IBase
@@ -39,9 +48,11 @@ class A : public IA
 public:
     A() = default;
 
-    void Print() override
+    std::string ToString() override
     {
-        printf("A[%p]\n", static_cast<void*>(this));
+        char buffer[128];
+        sprintf(buffer, "A[%p]", static_cast<void*>(this));
+        return buffer;
     }
 };
 
@@ -50,9 +61,12 @@ class B : public IB
 public:
     B(std::shared_ptr<IA> a) :_a(std::move(a)) {}
 
-    void Print() override
+    std::string ToString() override
     {
-        printf("A[%p]  B[%p]\n", static_cast<void*>(_a.get()), static_cast<void*>(this));
+        char buffer[128];
+        sprintf(buffer, "B[%p]", static_cast<void*>(this));
+        std::string ret = _a->ToString() + "  " + buffer;
+        return ret;
     }
 
 private:
@@ -62,18 +76,17 @@ private:
 class C : public IC
 {
 public:
-    C(std::shared_ptr<IA> a, std::shared_ptr<IB> b) : _a(std::move(a)), _b(std::move(b)) {}
+    C(std::shared_ptr<IB> b) : _b(std::move(b)) {}
 
-    void Print() override
+    std::string ToString() override
     {
-        printf("A[%p]  B[%p]  C[%p]\n",
-            static_cast<void*>(_a.get()),
-            static_cast<void*>(_b.get()),
-            static_cast<void*>(this));
+        char buffer[128];
+        sprintf(buffer, "C[%p]", static_cast<void*>(this));
+        std::string ret = _b->ToString() + "  " + buffer;
+        return ret;
     }
 
 private:
-    std::shared_ptr<IA> _a;
     std::shared_ptr<IB> _b;
 };
 
