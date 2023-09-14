@@ -91,8 +91,7 @@ private:
 
     // Low level registration.
     template <typename TInterface, typename... TDependencies>
-    void _AddServiceFactory(
-        std::function<std::shared_ptr<TInterface>(std::shared_ptr<TDependencies>... dependencies)> factory)
+    void _AddServiceFactory(std::function<std::shared_ptr<TInterface>(std::shared_ptr<TDependencies>... dependencies)> factory)
     {
         _services[_GetTypeId<TInterface>()] =
             std::make_shared<ServiceFactory<TInterface>>([=] { return factory(Resolve<TDependencies>()...); });
