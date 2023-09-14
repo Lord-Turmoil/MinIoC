@@ -36,14 +36,14 @@ public:
     // Resolve registered service.
     // nullptr returned if service not registered.
     template<typename TService>
-    std::shared_ptr<TService> ResolveService()
+    std::shared_ptr<TService> Resolve()
     {
         auto typeId = _GetTypeId<TService>();
         auto it = _services.find(typeId);
         if (it != _services.end())
         {
             auto factory = std::static_pointer_cast<ServiceFactory<TService>>(it->second);
-            return factory->ResolveService();
+            return factory->Resolve();
         }
         return nullptr;
     }
@@ -51,7 +51,7 @@ public:
     // Register a singleton.
     // Will replace old registrations silently.
     template<typename TInterface>
-    void RegisterSingleton(std::shared_ptr<TInterface> singleton)
+    void AddSingleton(std::shared_ptr<TInterface> singleton)
     {
         // std::map::emplace will not replace old value if key already presents.
         _services[_GetTypeId<TInterface>()] =
@@ -60,9 +60,9 @@ public:
 
     // Register a singleton with lazy behavior.
     template<typename TInterface, typename TConcrete, typename... TArguments>
-    void RegisterSingleton()
+    void AddSingleton()
     {
-        RegisterSingleton<TInterface>(std::make_shared<TConcrete>(ResolveService<TArguments>()...));
+        AddSingleton<TInterface>(std::make_shared<TConcrete>(Resolve<TArguments>()...));
     }
 
 private:
@@ -81,7 +81,7 @@ private:
         _services.emplace(
             _GetTypeId<TInterface>(),
             std::make_shared<ServiceFactory<TInterface>>([=] {
-                return functor(ResolveService<TDependencies>()...);
+                return functor(Resolve<TDependencies>()...);
                 })
         );
     }

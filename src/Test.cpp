@@ -19,25 +19,25 @@ void TestSingleton()
     const mioc::ServiceContainerPtr container = mioc::ServiceContainer::New();
 
     // Register singleton with no dependency.
-    container->RegisterSingleton<IA, A>();
-    const auto a1 = container->ResolveService<IA>();
+    container->AddSingleton<IA, A>();
+    const auto a1 = container->Resolve<IA>();
     a1->Print();
-    const auto a2 = container->ResolveService<IA>();
+    const auto a2 = container->Resolve<IA>();
     a2->Print();
 
     // Register singleton with dependency.
-    container->RegisterSingleton<IB, B, IA>();
-    const auto b1 = container->ResolveService<IB>();
+    container->AddSingleton<IB, B, IA>();
+    const auto b1 = container->Resolve<IB>();
     b1->Print();
-    const auto b2 = container->ResolveService<IB>();
+    const auto b2 = container->Resolve<IB>();
     b2->Print();
 
     // Register a given instance.
     const std::shared_ptr<IC> c = std::make_shared<C>(b1);
-    container->RegisterSingleton(c);
-    const auto c1 = container->ResolveService<IC>();
+    container->AddSingleton(c);
+    const auto c1 = container->Resolve<IC>();
     c1->Print();
-    const auto c2 = container->ResolveService<IC>();
+    const auto c2 = container->Resolve<IC>();
     c2->Print();
 
     printf("\n========== TEST END ==========\n");
