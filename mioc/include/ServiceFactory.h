@@ -28,8 +28,8 @@ template<typename TService>
 class ServiceFactory : public IServiceFactory
 {
 public:
-    explicit ServiceFactory(std::function<std::shared_ptr<TService>()> provider)
-        : _provider(std::move(provider))
+    explicit ServiceFactory(const std::function<std::shared_ptr<TService>()>& provider)
+        : _provider(provider)
     {
     }
 
@@ -50,8 +50,8 @@ template<typename TService>
 class SingletonServiceFactory : public ServiceFactory<TService>
 {
 public:
-    explicit SingletonServiceFactory(std::function<std::shared_ptr<TService>()> provider)
-        : ServiceFactory<TService>(std::move(provider))
+    explicit SingletonServiceFactory(const std::function<std::shared_ptr<TService>()>& provider)
+        : ServiceFactory<TService>(provider)
     {
     }
 

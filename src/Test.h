@@ -1,3 +1,5 @@
+// Copyright (C) 2018 - 2023 Tony's Studio. All rights reserved.
+
 #pragma once
 
 #ifndef _MIOC_TEST_H_
@@ -6,7 +8,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <cstdio>
-#include <ctime>
 #include <memory>
 #include <string>
 
@@ -17,6 +18,7 @@ public:
     virtual ~IBase() = default;
 
     virtual std::string ToString() = 0;
+
     virtual void Print()
     {
         printf("%s\n", ToString().c_str());
@@ -62,7 +64,7 @@ public:
 class B : public IB
 {
 public:
-    B(std::shared_ptr<IA> a) :_a(std::move(a))
+    explicit B(const std::shared_ptr<IA>& a) : _a(a)
     {
         printf("B[%p] created.\n", static_cast<void*>(this));
     }
@@ -82,7 +84,7 @@ private:
 class C : public IC
 {
 public:
-    C(std::shared_ptr<IB> b) : _b(std::move(b))
+    explicit C(const std::shared_ptr<IB>& b) : _b(b)
     {
         printf("C[%p] created.\n", static_cast<void*>(this));
     }
