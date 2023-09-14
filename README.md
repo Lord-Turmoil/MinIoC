@@ -12,9 +12,9 @@ A mini IoC implementation with C++.
 
 ## 1. Overview
 
-Since everything is implemented with C++ template, so there are only header files located under `mioc/include` directory. And a test file `Test.cpp` is placed under `src/` directory as an example.
+This container provides two object lifetime - singleton and transient. Singleton object will be created only once, while transient object will be constructed every time it is resolved. What's more, for singleton objects, it by default provides lazy initialization. Of course, you can choose not enable it.
 
-This container provides two object lifetime - singleton and transient. Singleton object will be created on adding, and no more instances will be created later. While transient object will be constructed every time it is resolved.
+Since everything is implemented with C++ template, so there are only header files located under `mioc/include` directory. And a test file `Test.cpp` is placed under `src/` directory as an example.
 
 To avoid pointer problems, I use `std::shared_ptr` to wrap all native pointers. 🙂
 
@@ -50,18 +50,22 @@ private:
 
 ### 2.2 Create Container
 
-You can create a container using `ServiceContainer::New()`. In this case, you have to inject this container everywhere you need.
+You can create a container using `ServiceContainer::New()`. In this case, you have to inject this container everywhere you need. You can choose whether to enable lazy initialization for this container on, and **only on** creation. You **won't** be able to change it later. By default, lazy initialization is enabled.
 
-```c++
+```cpp
 #include "ServiceContainer.h"
-mioc::ServiceContainerPtr container = mioc::ServiceContainer::New();
+mioc::ServiceContainerPtr lazyContainer = mioc::ServiceContainer::New();
+mioc::ServiceContainerPtr hungryContainer = mioc::ServiceContainer::New(false);
 ```
 
-Or, you can use `SingletonContainer` which provides you a global scale singleton container. This container will not be created until the first time you get it.
+Or, you can use `SingletonContainer` which provides you a global scale singleton container. This container will not be created until the first time you get it. Also, on your first call, you can choose whether to enable lazy initialization for the global container.
 
-```c++
+```cpp
 #include "SingletonContainer.h"
+// by default, global container enables lazy initialization
 mioc::ServiceContainerPtr container = mioc::SingletonContainer::GetContainer();
+// or you can disable it on, and only on the first call
+mioc::ServiceContainerPtr container = mioc::SingletonContainer::GetContainer(false);
 ```
 
 ### 2.3 Add Singleton
@@ -73,9 +77,9 @@ container->AddSingleton<IA, A>();      // without dependency
 container->AddSingleton<IB, B, IA>();  // with dependencies
 ```
 
-Also, you can directly add a pre-constructed instance to it. This way, you may need a pointer conversion first, which convert concrete type to its corresponding interface. You don't need to pass type name in this case.
+Also, you can directly add a pre-constructed instance to it. This way, you may need a pointer conversion first, which convert concrete type to its corresponding interface. You don't need to pass type name in this case. And, of course, lazy initialization matter not in this way.
 
-```c++
+```cpp
 std::shared_ptr<IC> c = std::make_shared<C>(b);
 container->AddSingleton(c);
 ```
@@ -84,7 +88,7 @@ container->AddSingleton(c);
 
 It is simpler to add a transient object. We just need to pass type names, and they will be properly resolved later.
 
-```c++
+```cpp
 container->AddTransient<IA, A>();
 container->AddTransient<IB, B, IA>();
 container->AddTransient<IC, C, IB>();
@@ -94,13 +98,11 @@ container->AddTransient<IC, C, IB>();
 
 No matter which way you use to add objects into the container, you can always resolve a instance with the interface type you provided on adding. `nullptr` will be returned if the interface is not registered.
 
-```c++
+```cpp
 std::shared_ptr<IC> c = container->Resolve<IC>();
 ```
 
 ## 3. Limitations
 
-Though this mini IoC container can handle dependency injection, you have to manually specify all dependencies a instance needs.
-
-Also, it does not support lazy initialization yet, which means all instances are created on registration. 🥲
+Though this mini IoC container can handle dependency injection, you have to manually specify all dependencies when you add anything. 🥲
 
