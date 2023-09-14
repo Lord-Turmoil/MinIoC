@@ -11,9 +11,11 @@
 
 MIOC_BEGIN
 
+
 class ServiceContainer;
 using ServiceContainerPtr = std::shared_ptr<ServiceContainer>;
 
+// This container does not yet support lazy initialization.
 class ServiceContainer final
 {
 public:
@@ -35,7 +37,7 @@ public:
 
     // Resolve registered service.
     // nullptr returned if service not registered.
-    template<typename TService>
+    template <typename TService>
     std::shared_ptr<TService> Resolve()
     {
         auto typeId = _GetTypeId<TService>();
@@ -48,9 +50,9 @@ public:
         return nullptr;
     }
 
-    // Register a singleton.
+    // Register a singleton instance.
     // Will replace old registrations silently.
-    template<typename TInterface>
+    template <typename TInterface>
     void AddSingleton(std::shared_ptr<TInterface> singleton)
     {
         // std::map::emplace will not replace old value if key already presents.
@@ -58,32 +60,40 @@ public:
             std::make_shared<ServiceFactory<TInterface>>([=] { return singleton; });
     }
 
-    // Register a singleton with lazy behavior.
-    template<typename TInterface, typename TConcrete, typename... TArguments>
+    // Register a singleton by passing arguments to constructor.
+    template <typename TInterface, typename TConcrete, typename... TArguments>
     void AddSingleton()
     {
         AddSingleton<TInterface>(std::make_shared<TConcrete>(Resolve<TArguments>()...));
     }
 
+    // Register a transient instance.
+    template <typename TInterface, typename TConcrete, typename... TArguments>
+    void AddTransient()
+    {
+        _AddServiceFactory(
+            std::function<std::shared_ptr<TInterface>(std::shared_ptr<TArguments>... args)>(
+                [](std::shared_ptr<TArguments>... args) -> std::shared_ptr<TInterface> {
+                    return std::make_shared<TConcrete>(std::forward<std::shared_ptr<TArguments>>(args)...);
+                }));
+    }
+
 private:
     // Make sure one type is mapped to one id.
-    template<typename TService>
+    template <typename TService>
     static int _GetTypeId()
     {
         static int typeId = _nextTypeId++;
         return typeId;
     }
 
-    // Lowest level registration is to register a functor directly.
-    template<typename TInterface, typename... TDependencies>
-    void _RegisterFunctor(std::function<std::shared_ptr<TInterface>(std::shared_ptr<TDependencies>... dependencies)> functor)
+    // Low level registration.
+    template <typename TInterface, typename... TDependencies>
+    void _AddServiceFactory(
+        std::function<std::shared_ptr<TInterface>(std::shared_ptr<TDependencies>... dependencies)> factory)
     {
-        _services.emplace(
-            _GetTypeId<TInterface>(),
-            std::make_shared<ServiceFactory<TInterface>>([=] {
-                return functor(Resolve<TDependencies>()...);
-                })
-        );
+        _services[_GetTypeId<TInterface>()] =
+            std::make_shared<ServiceFactory<TInterface>>([=] { return factory(Resolve<TDependencies>()...); });
     }
 
 private:

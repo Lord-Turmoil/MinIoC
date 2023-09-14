@@ -9,6 +9,8 @@
 #include <memory>
 
 MIOC_BEGIN
+
+
 // Abstract representation of service factory.
 class IServiceFactory
 {
@@ -17,22 +19,22 @@ public:
     virtual ~IServiceFactory() = 0;
 };
 
-IServiceFactory::~IServiceFactory() = default;
+inline IServiceFactory::~IServiceFactory() = default;
 
 
 // ServiceFactory can provide an object of specified type.
 template<typename TService>
-class ServiceFactory : public IServiceFactory
+class ServiceFactory final : public IServiceFactory
 {
 private:
     std::function<std::shared_ptr<TService>()> _provider;
 
 public:
-    ServiceFactory(std::function<std::shared_ptr<TService>()> provider) : _provider(std::move(provider)) {}
+    explicit ServiceFactory(std::function<std::shared_ptr<TService>()> provider) : _provider(std::move(provider)) {}
     ~ServiceFactory() override = default;
 
     // Get the service of specified type.
-    std::shared_ptr<TService> ResolveService()
+    std::shared_ptr<TService> Resolve()
     {
         return _provider();
     }
