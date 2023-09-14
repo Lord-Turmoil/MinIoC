@@ -12,17 +12,17 @@ A mini IoC implementation with C++.
 
 ## 1. Overview
 
-This container provides two object lifetime - singleton and transient. Singleton object will be created only once, while transient object will be constructed every time it is resolved. What's more, for singleton objects, it by default provides lazy initialization. Of course, you can choose not enable it.
+This mini IoC container provides basic adding and resolving abilities, and simplest dependency injection. It provides two lifetimes - singleton and transient. Singleton object will be created only once, while transient object will be constructed every time it is resolved. What's more, it can provide lazy initialization for singleton instance. 😁
 
-Since everything is implemented with C++ template, so there are only header files located under `mioc/include` directory. And a test file `Test.cpp` is placed under `src/` directory as an example.
+Since everything is implemented with C++ template, there are only header files located under `mioc/include` directory. And a test file `Test.cpp` is placed under `src/` directory as an example.
 
-To avoid pointer problems, I use `std::shared_ptr` to wrap all native pointers. 🙂
+To avoid pointer problems, `std::shared_ptr` is used everywhere to wrap all native pointers. 🙂
 
 ## 2. Usage
 
 ### 2.1 Test Classes
 
-Here are the classes we use in this demonstration. Interfaces are omitted as they are really simple. We can see that, B depends on A, and C depends on B.
+Here are the classes we use in this demonstration. Interfaces are omitted as they are really simple. We can see that, B depends on A, and C depends on B. 🧐
 
 ```cpp
 class A : public IA
