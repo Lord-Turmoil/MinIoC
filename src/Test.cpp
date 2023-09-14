@@ -8,6 +8,7 @@
 void TestSingleton();
 void TestTransient();
 void TestTransient2();
+
 int main()
 {
     const auto container = mioc::SingletonContainer::GetContainer();

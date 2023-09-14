@@ -1,3 +1,5 @@
+// Copyright (C) 2018 - 2023 Tony's Studio. All rights reserved.
+
 #pragma once
 
 #ifndef _MIOC_SERVICE_FACTORY_H_
@@ -23,18 +25,21 @@ inline IServiceFactory::~IServiceFactory() = default;
 
 
 // ServiceFactory can provide an object of specified type.
-template<typename TService>
+template <typename TService>
 class ServiceFactory final : public IServiceFactory
 {
 private:
     std::function<std::shared_ptr<TService>()> _provider;
 
 public:
-    explicit ServiceFactory(std::function<std::shared_ptr<TService>()> provider) : _provider(std::move(provider)) {}
+    explicit ServiceFactory(std::function<std::shared_ptr<TService>()> provider) : _provider(std::move(provider))
+    {
+    }
+
     ~ServiceFactory() override = default;
 
     // Get the service of specified type.
-    std::shared_ptr<TService> Resolve()
+    std::shared_ptr<TService> Resolve() const
     {
         return _provider();
     }

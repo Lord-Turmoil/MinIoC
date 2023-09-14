@@ -1,3 +1,5 @@
+// Copyright (C) 2018 - 2023 Tony's Studio. All rights reserved.
+
 #pragma once
 
 #ifndef _MIOC_SERVICE_CONTAINER_H_
@@ -38,7 +40,7 @@ public:
     // Resolve registered service.
     // nullptr returned if service not registered.
     template <typename TService>
-    std::shared_ptr<TService> Resolve()
+    std::shared_ptr<TService> Resolve() const
     {
         auto typeId = _GetTypeId<TService>();
         auto it = _services.find(typeId);
