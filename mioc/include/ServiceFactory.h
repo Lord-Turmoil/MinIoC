@@ -12,7 +12,6 @@
 
 MIOC_BEGIN
 
-
 // Abstract representation of service factory.
 class IServiceFactory
 {
@@ -24,25 +23,51 @@ public:
 inline IServiceFactory::~IServiceFactory() = default;
 
 
-// ServiceFactory can provide an object of specified type.
-template <typename TService>
-class ServiceFactory final : public IServiceFactory
+// Transient service factory will create a new instance every time.
+template<typename TService>
+class ServiceFactory : public IServiceFactory
 {
-private:
-    std::function<std::shared_ptr<TService>()> _provider;
-
 public:
-    explicit ServiceFactory(std::function<std::shared_ptr<TService>()> provider) : _provider(std::move(provider))
+    explicit ServiceFactory(std::function<std::shared_ptr<TService>()> provider)
+        : _provider(std::move(provider))
     {
     }
 
     ~ServiceFactory() override = default;
 
-    // Get the service of specified type.
-    std::shared_ptr<TService> Resolve() const
+    virtual std::shared_ptr<TService> Resolve()
     {
         return _provider();
     }
+
+private:
+    std::function<std::shared_ptr<TService>()> _provider;
+};
+
+
+// Singleton service factory will create only one instance.
+template<typename TService>
+class SingletonServiceFactory : public ServiceFactory<TService>
+{
+public:
+    explicit SingletonServiceFactory(std::function<std::shared_ptr<TService>()> provider)
+        : ServiceFactory<TService>(std::move(provider))
+    {
+    }
+
+    ~SingletonServiceFactory() override = default;
+
+    std::shared_ptr<TService> Resolve() override
+    {
+        if (_instance == nullptr)
+        {
+            _instance = ServiceFactory<TService>::Resolve();
+        }
+        return _instance;
+    }
+
+private:
+    std::shared_ptr<TService> _instance;
 };
 
 

@@ -46,7 +46,10 @@ public:
 class A : public IA
 {
 public:
-    A() = default;
+    A()
+    {
+        printf("A[%p] created.\n", static_cast<void*>(this));
+    }
 
     std::string ToString() override
     {
@@ -59,7 +62,10 @@ public:
 class B : public IB
 {
 public:
-    B(std::shared_ptr<IA> a) :_a(std::move(a)) {}
+    B(std::shared_ptr<IA> a) :_a(std::move(a))
+    {
+        printf("B[%p] created.\n", static_cast<void*>(this));
+    }
 
     std::string ToString() override
     {
@@ -76,7 +82,10 @@ private:
 class C : public IC
 {
 public:
-    C(std::shared_ptr<IB> b) : _b(std::move(b)) {}
+    C(std::shared_ptr<IB> b) : _b(std::move(b))
+    {
+        printf("C[%p] created.\n", static_cast<void*>(this));
+    }
 
     std::string ToString() override
     {

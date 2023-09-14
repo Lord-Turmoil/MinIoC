@@ -13,5 +13,6 @@
 #define MIOC_END   }
 #define MIOC	     ::mioc::
 
+constexpr bool DEFAULT_LAZINESS = true;
 
 #endif // !_MIOC_MACROS_H_

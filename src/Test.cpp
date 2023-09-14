@@ -26,21 +26,18 @@ void TestSingleton()
 {
     printf("========== TEST: Singleton ==========\n\n");
 
-    const auto a = mioc::SingletonContainer::GetContainer()->Resolve<IA>();
-    printf("Global: ");
-    a->Print();
+    const mioc::ServiceContainerPtr container = mioc::ServiceContainer::New(false);
 
-    const mioc::ServiceContainerPtr container = mioc::ServiceContainer::New();
-
-    // Register singleton with no dependency.
+    // Register interfaces and implementations.
     container->AddSingleton<IA, A>();
+    container->AddSingleton<IB, B, IA>();
+
+    // Resolve instances.
     const auto a1 = container->Resolve<IA>();
     a1->Print();
     const auto a2 = container->Resolve<IA>();
     a2->Print();
 
-    // Register singleton with dependency.
-    container->AddSingleton<IB, B, IA>();
     const auto b1 = container->Resolve<IB>();
     b1->Print();
     const auto b2 = container->Resolve<IB>();
@@ -55,6 +52,11 @@ void TestSingleton()
     c2->Print();
 
     printf("\n========== TEST END ==========\n\n");
+
+    const auto a = mioc::SingletonContainer::GetContainer()->Resolve<IA>();
+    printf("Global: ");
+    a->Print();
+    putchar('\n');
 }
 
 
@@ -62,66 +64,68 @@ void TestTransient()
 {
     printf("========== TEST: Transient ==========\n\n");
 
-    const auto a = mioc::SingletonContainer::GetContainer()->Resolve<IA>();
-    printf("Global: ");
-    a->Print();
-
     const mioc::ServiceContainerPtr container = mioc::ServiceContainer::New();
 
-    // Register singleton that will be used by transient.
+    // Register interfaces and implementations.
     container->AddSingleton<IA, A>();
+    container->AddTransient<IB, B, IA>();
+    container->AddTransient<IC, C, IB>();
+
+    // Resolve instances.
     const auto a1 = container->Resolve<IA>();
     a1->Print();
     const auto a2 = container->Resolve<IA>();
     a2->Print();
 
-    // Register transient with dependency.
-    container->AddTransient<IB, B, IA>();
     const auto b1 = container->Resolve<IB>();
     b1->Print();
     const auto b2 = container->Resolve<IB>();
     b2->Print();
 
-    // Register a transient that depends on a transient.
-    container->AddTransient<IC, C, IB>();
     const auto c1 = container->Resolve<IC>();
     c1->Print();
     const auto c2 = container->Resolve<IC>();
     c2->Print();
 
     printf("\n========== TEST END ==========\n\n");
+
+    const auto a = mioc::SingletonContainer::GetContainer()->Resolve<IA>();
+    printf("Global: ");
+    a->Print();
+    putchar('\n');
 }
 
 void TestTransient2()
 {
     printf("========== TEST: Transient 2 ==========\n\n");
 
-    const auto a = mioc::SingletonContainer::GetContainer()->Resolve<IA>();
-    printf("Global: ");
-    a->Print();
-
     const mioc::ServiceContainerPtr container = mioc::ServiceContainer::New();
 
-    // Register a transient.
+    // Register interfaces and implementations.
     container->AddTransient<IA, A>();
+    container->AddSingleton<IB, B, IA>();
+    container->AddTransient<IC, C, IB>();
+
+    // Resolve instances.
     const auto a1 = container->Resolve<IA>();
     a1->Print();
     const auto a2 = container->Resolve<IA>();
     a2->Print();
 
-    // Register a singleton with transient dependency.
-    container->AddSingleton<IB, B, IA>();
     const auto b1 = container->Resolve<IB>();
     b1->Print();
     const auto b2 = container->Resolve<IB>();
     b2->Print();
 
-    // Register a transient that depends on a singleton.
-    container->AddTransient<IC, C, IB>();
     const auto c1 = container->Resolve<IC>();
     c1->Print();
     const auto c2 = container->Resolve<IC>();
     c2->Print();
 
     printf("\n========== TEST END ==========\n\n");
+
+    const auto a = mioc::SingletonContainer::GetContainer()->Resolve<IA>();
+    printf("Global: ");
+    a->Print();
+    putchar('\n');
 }
