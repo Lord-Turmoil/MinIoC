@@ -1,21 +1,13 @@
-﻿# CMakeList.txt : CMake project for IoC, include source and define
-# project specific logic here.
-#
-cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required(VERSION 3.26)
+project(MIoC)
 
-# Enable Hot Reload for MSVC compilers if supported.
-if (POLICY CMP0141)
-  cmake_policy(SET CMP0141 NEW)
-  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
-endif()
+set(CMAKE_CXX_STANDARD 11)
 
-project ("IoC")
+# Add all source files
+file(GLOB_RECURSE SRC_LIST CONFIGURE_DEPENDS src/*.cpp)
 
-# Add source to this project's executable.
-add_executable (IoC  "src/Macros.h" "src/ServiceFactory.h"  "src/ServiceContainer.h" "test/Test.cpp" "test/Test.hpp")
+# Add final target.
+add_executable(${CMAKE_PROJECT_NAME} ${SRC_LIST})
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET IoC PROPERTY CXX_STANDARD 20)
-endif()
-
-# TODO: Add tests and install targets if needed.
+# Set include directories.
+target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC mioc/include)
