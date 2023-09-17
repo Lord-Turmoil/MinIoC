@@ -9,5 +9,6 @@ file(GLOB_RECURSE SRC_LIST CONFIGURE_DEPENDS src/*.cpp)
 # Add final target.
 add_executable(${CMAKE_PROJECT_NAME} ${SRC_LIST})
 
-# Set include directories.
-target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC mioc/include)
+# dependency
+add_subdirectory(mioc)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE mioc)

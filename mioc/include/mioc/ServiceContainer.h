@@ -17,7 +17,6 @@ MIOC_BEGIN
 class ServiceContainer;
 using ServiceContainerPtr = std::shared_ptr<ServiceContainer>;
 
-// This container does not yet support lazy initialization.
 class ServiceContainer final
 {
 public:
