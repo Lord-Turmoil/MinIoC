@@ -9,6 +9,7 @@ A mini IoC implementation with C++.
 > Some necessary modifications have been made to the source code on the website, and here is the original License: [The Code Project Open License (CPOL)](https://www.codeproject.com/info/cpol10.aspx)
 
 ---
+[![Build](https://github.com/Lord-Turmoil/MinIoc/actions/workflows/cmake-multi-platform.yml/badge.svg?branch=main)](https://github.com/Lord-Turmoil/MinIoc/actions/workflows/cmake-multi-platform.yml)
 
 ## 1. Overview
 
