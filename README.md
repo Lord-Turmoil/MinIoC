@@ -1,4 +1,4 @@
-## Mini IoC
+# Mini IoC
 
 A mini IoC implementation with C++.
 
@@ -18,6 +18,8 @@ This mini IoC container provides basic adding and resolving abilities and the si
 Since everything is implemented with C++ template, only header files are located under the `mioc/include` directory. A test file, `Test.cpp` is placed under the `src/` directory as an example.
 
 To avoid pointer problems, `std::shared_ptr` is used everywhere to wrap all native pointers. 🙂
+
+It will be very nice for you to light up the 🌟. :)
 
 ## 2. Usage
 
