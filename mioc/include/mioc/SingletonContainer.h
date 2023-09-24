@@ -13,25 +13,18 @@
 MIOC_BEGIN
 
 
-class SingletonContainer
+class SingletonContainer final
 {
 public:
+    SingletonContainer(const SingletonContainer&) = delete;
+    SingletonContainer& operator=(const SingletonContainer&) = delete;
+    SingletonContainer(SingletonContainer&&) = delete;
+    SingletonContainer& operator=(SingletonContainer&&) = delete;
+
     ~SingletonContainer() = default;
 
-    static ServiceContainerPtr GetContainer()
-    {
-        if (_container == nullptr)
-        {
-            _container = ServiceContainer::New(_lazy);
-        }
-        return _container;
-    }
-
-    static ServiceContainerPtr GetContainer(bool lazy)
-    {
-        _lazy = lazy;
-        return GetContainer();
-    }
+    static ServiceContainerPtr GetContainer();
+    static ServiceContainerPtr GetContainer(bool lazy);
 
 private:
     // Prevent instantiation.
@@ -40,9 +33,6 @@ private:
     static std::shared_ptr<ServiceContainer> _container;
     static bool _lazy;
 };
-
-std::shared_ptr<ServiceContainer> SingletonContainer::_container;
-bool SingletonContainer::_lazy = DEFAULT_LAZINESS;
 
 
 MIOC_END
