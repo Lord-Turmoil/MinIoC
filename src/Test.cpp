@@ -2,8 +2,7 @@
 
 #include <memory>
 #include "Test.h"
-#include <mioc/ServiceContainer.h>
-#include <mioc/SingletonContainer.h>
+#include <mioc.h>
 
 void TestSingleton();
 void TestTransient();
