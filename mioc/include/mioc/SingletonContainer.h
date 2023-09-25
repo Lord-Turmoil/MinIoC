@@ -5,8 +5,8 @@
 #ifndef _MIOC_SINGLETON_CONTAINER_H_
 #define _MIOC_SINGLETON_CONTAINER_H_
 
-#include "Macros.h"
-#include "ServiceContainer.h"
+#include <mioc/Macros.h>
+#include <mioc/ServiceContainer.h>
 
 #include <memory>
 

@@ -1,7 +1,5 @@
 // Copyright (C) 2018 - 2023 Tony's Studio. All rights reserved.
 
-// All-in-one header for Mini IoC Lib.
-
 #pragma once
 
 #ifndef _MIOC_H_
