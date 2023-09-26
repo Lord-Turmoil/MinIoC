@@ -56,11 +56,15 @@ public:
 
     virtual std::shared_ptr<TService> Resolve()
     {
-        return _provider();
+        return _provider ? _provider() : nullptr;
     }
 
+protected:
+    // Used by SingletonServiceFactory when instance is directly provided.
+    ServiceFactory() = default;
+
 private:
-    std::function<std::shared_ptr<TService>()> _provider;
+    ServiceProvider<TService> _provider;
 };
 
 
@@ -72,6 +76,12 @@ public:
     explicit SingletonServiceFactory(const ServiceProvider<TService>& provider)
         : ServiceFactory<TService>(provider)
     {
+    }
+
+    explicit SingletonServiceFactory(std::shared_ptr<TService> instance)
+        : ServiceFactory<TService>()
+    {
+        _instance = std::move(instance);
     }
 
     SingletonServiceFactory(const SingletonServiceFactory&) = default;
@@ -102,6 +112,7 @@ public:
         {
             _instance = ServiceFactory<TService>::Resolve();
         }
+
         return _instance;
     }
 

@@ -59,8 +59,7 @@ public:
     void AddSingleton(std::shared_ptr<TInterface> singleton)
     {
         // std::map::emplace will not replace old value if key already presents.
-        _services[_GetTypeId<TInterface>()] =
-            std::make_shared<ServiceFactory<TInterface>>([=] { return singleton; });
+        _services[_GetTypeId<TInterface>()] = std::make_shared<SingletonServiceFactory<TInterface>>(singleton);
     }
 
     // Register a singleton by passing arguments to constructor.
