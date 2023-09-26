@@ -22,15 +22,34 @@ public:
 
 inline IServiceFactory::~IServiceFactory() = default;
 
+template<typename TService>
+using ServiceProvider = std::function<std::shared_ptr<TService>()>;
 
 // Transient service factory will create a new instance every time.
 template<typename TService>
 class ServiceFactory : public IServiceFactory
 {
 public:
-    explicit ServiceFactory(const std::function<std::shared_ptr<TService>()>& provider)
+    explicit ServiceFactory(const ServiceProvider<TService>& provider)
         : _provider(provider)
     {
+    }
+
+    ServiceFactory(const ServiceFactory&) = default;
+    ServiceFactory& operator=(const ServiceFactory&) = default;
+
+    ServiceFactory(ServiceFactory&& other) noexcept
+    {
+        _provider = std::move(other._provider);
+    }
+
+    ServiceFactory& operator=(ServiceFactory&& other) noexcept
+    {
+        if (this != &other)
+        {
+            _provider = std::move(other._provider);
+        }
+        return *this;
     }
 
     ~ServiceFactory() override = default;
@@ -47,13 +66,33 @@ private:
 
 // Singleton service factory will create only one instance.
 template<typename TService>
-class SingletonServiceFactory : public ServiceFactory<TService>
+class SingletonServiceFactory final : public ServiceFactory<TService>
 {
 public:
-    explicit SingletonServiceFactory(const std::function<std::shared_ptr<TService>()>& provider)
+    explicit SingletonServiceFactory(const ServiceProvider<TService>& provider)
         : ServiceFactory<TService>(provider)
     {
     }
+
+    SingletonServiceFactory(const SingletonServiceFactory&) = default;
+    SingletonServiceFactory& operator=(const SingletonServiceFactory&) = default;
+
+    SingletonServiceFactory(SingletonServiceFactory&& other) noexcept
+        : ServiceFactory<TService>(std::move(other))
+    {
+        _instance = std::move(other._instance);
+    }
+
+    SingletonServiceFactory& operator=(SingletonServiceFactory&& other) noexcept
+    {
+        if (this != &other)
+        {
+            ServiceFactory<TService>::operator=(std::move(other));
+            _instance = std::move(other._instance);
+        }
+        return *this;
+    }
+
 
     ~SingletonServiceFactory() override = default;
 

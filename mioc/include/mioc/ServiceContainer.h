@@ -20,7 +20,9 @@ using ServiceContainerPtr = std::shared_ptr<ServiceContainer>;
 class ServiceContainer final
 {
 public:
-    explicit ServiceContainer(bool lazy = DEFAULT_LAZINESS) : _lazy(lazy) {}
+    explicit ServiceContainer(bool lazy = DEFAULT_LAZINESS) : _lazy(lazy)
+    {
+    }
 
     // Any copy of service container is not allowed.
     ServiceContainer(const ServiceContainer&) = delete;
