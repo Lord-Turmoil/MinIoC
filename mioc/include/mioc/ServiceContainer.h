@@ -17,6 +17,8 @@ MIOC_BEGIN
 class ServiceContainer;
 using ServiceContainerPtr = std::shared_ptr<ServiceContainer>;
 
+// The return value of adding service methods are only intended for chained call,
+// thus raw pointer is returned. It may cause problem if you capture this value!
 class ServiceContainer final
 {
 public:
@@ -56,15 +58,16 @@ public:
     // Register a singleton instance.
     // Will replace old registrations silently.
     template<typename TInterface>
-    void AddSingleton(std::shared_ptr<TInterface> singleton)
+    ServiceContainer* AddSingleton(std::shared_ptr<TInterface> singleton)
     {
         // std::map::emplace will not replace old value if key already presents.
         _services[_GetTypeId<TInterface>()] = std::make_shared<SingletonServiceFactory<TInterface>>(singleton);
+        return this;
     }
 
     // Register a singleton by passing arguments to constructor.
     template<typename TInterface, typename TConcrete, typename... TArguments>
-    void AddSingleton()
+    ServiceContainer* AddSingleton()
     {
         if (_lazy)
         {
@@ -78,17 +81,21 @@ public:
         {
             AddSingleton<TInterface>(std::make_shared<TConcrete>(Resolve<TArguments>()...));
         }
+
+        return this;
     }
 
     // Register a transient instance.
     template<typename TInterface, typename TConcrete, typename... TArguments>
-    void AddTransient()
+    ServiceContainer* AddTransient()
     {
         _AddTransientServiceFactory(
             std::function<std::shared_ptr<TInterface>(std::shared_ptr<TArguments>... args)>(
                 [](std::shared_ptr<TArguments>... args) -> std::shared_ptr<TInterface> {
                     return std::make_shared<TConcrete>(std::forward<std::shared_ptr<TArguments>>(args)...);
                 }));
+
+        return this;
     }
 
 private:
