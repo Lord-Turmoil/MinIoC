@@ -11,6 +11,7 @@
 #include <memory>
 #include <string>
 
+
 // Class interfaces.
 class IBase
 {
@@ -19,11 +20,13 @@ public:
 
     virtual std::string ToString() = 0;
 
+
     virtual void Print()
     {
         printf("%s\n", ToString().c_str());
     }
 };
+
 
 class IA : public IBase
 {
@@ -31,11 +34,13 @@ public:
     ~IA() override = default;
 };
 
+
 class IB : public IBase
 {
 public:
     ~IB() override = default;
 };
+
 
 class IC : public IBase
 {
@@ -53,6 +58,7 @@ public:
         printf("A[%p] created.\n", static_cast<void*>(this));
     }
 
+
     std::string ToString() override
     {
         char buffer[128];
@@ -61,6 +67,7 @@ public:
     }
 };
 
+
 class B : public IB
 {
 public:
@@ -68,6 +75,7 @@ public:
     {
         printf("B[%p] created.\n", static_cast<void*>(this));
     }
+
 
     std::string ToString() override
     {
@@ -81,6 +89,7 @@ private:
     std::shared_ptr<IA> _a;
 };
 
+
 class C : public IC
 {
 public:
@@ -88,6 +97,7 @@ public:
     {
         printf("C[%p] created.\n", static_cast<void*>(this));
     }
+
 
     std::string ToString() override
     {

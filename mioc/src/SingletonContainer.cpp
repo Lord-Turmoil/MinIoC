@@ -14,11 +14,13 @@ ServiceContainerPtr SingletonContainer::GetContainer()
     return _container;
 }
 
+
 ServiceContainerPtr SingletonContainer::GetContainer(bool lazy)
 {
     _lazy = lazy;
     return GetContainer();
 }
+
 
 std::shared_ptr<ServiceContainer> SingletonContainer::_container;
 bool SingletonContainer::_lazy = DEFAULT_LAZINESS;

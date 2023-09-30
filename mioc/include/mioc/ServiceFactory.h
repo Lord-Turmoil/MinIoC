@@ -20,10 +20,12 @@ public:
     virtual ~IServiceFactory() = 0;
 };
 
+
 inline IServiceFactory::~IServiceFactory() = default;
 
 template<typename TService>
 using ServiceProvider = std::function<std::shared_ptr<TService>()>;
+
 
 // Transient service factory will create a new instance every time.
 template<typename TService>
@@ -35,13 +37,16 @@ public:
     {
     }
 
+
     ServiceFactory(const ServiceFactory&) = default;
     ServiceFactory& operator=(const ServiceFactory&) = default;
+
 
     ServiceFactory(ServiceFactory&& other) noexcept
     {
         _provider = std::move(other._provider);
     }
+
 
     ServiceFactory& operator=(ServiceFactory&& other) noexcept
     {
@@ -52,7 +57,9 @@ public:
         return *this;
     }
 
+
     ~ServiceFactory() override = default;
+
 
     virtual std::shared_ptr<TService> Resolve()
     {
@@ -78,20 +85,24 @@ public:
     {
     }
 
+
     explicit SingletonServiceFactory(std::shared_ptr<TService> instance)
         : ServiceFactory<TService>()
     {
         _instance = std::move(instance);
     }
 
+
     SingletonServiceFactory(const SingletonServiceFactory&) = default;
     SingletonServiceFactory& operator=(const SingletonServiceFactory&) = default;
+
 
     SingletonServiceFactory(SingletonServiceFactory&& other) noexcept
         : ServiceFactory<TService>(std::move(other))
     {
         _instance = std::move(other._instance);
     }
+
 
     SingletonServiceFactory& operator=(SingletonServiceFactory&& other) noexcept
     {
@@ -105,6 +116,7 @@ public:
 
 
     ~SingletonServiceFactory() override = default;
+
 
     std::shared_ptr<TService> Resolve() override
     {
