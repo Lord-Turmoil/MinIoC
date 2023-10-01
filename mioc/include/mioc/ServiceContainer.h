@@ -45,13 +45,13 @@ public:
     // Resolve registered service.
     // nullptr returned if service not registered.
     template<typename TService>
-    std::shared_ptr<TService> Resolve() const
+    ServicePtr<TService> Resolve() const
     {
         auto typeId = _GetTypeId<TService>();
         auto it = _services.find(typeId);
         if (it != _services.end())
         {
-            auto factory = std::static_pointer_cast<ServiceFactory<TService>>(it->second);
+            auto factory = std::static_pointer_cast<TransientServiceFactory<TService>>(it->second);
             return factory->Resolve();
         }
         return nullptr;
@@ -61,7 +61,7 @@ public:
     // Register a singleton instance.
     // Will replace old registrations silently.
     template<typename TInterface>
-    ServiceContainer* AddSingleton(std::shared_ptr<TInterface> singleton)
+    ServiceContainer* AddSingleton(ServicePtr<TInterface> singleton)
     {
         // std::map::emplace will not replace old value if key already presents.
         _services[_GetTypeId<TInterface>()] = std::make_shared<SingletonServiceFactory<TInterface>>(singleton);
@@ -76,10 +76,9 @@ public:
         if (_lazy)
         {
             _AddSingletonServiceFactory(
-                std::function<std::shared_ptr<TInterface>(std::shared_ptr<TArguments>... args)>(
-                    [](std::shared_ptr<TArguments>... args) -> std::shared_ptr<TInterface>
-                    {
-                        return std::make_shared<TConcrete>(std::forward<std::shared_ptr<TArguments>>(args)...);
+                std::function<ServicePtr<TInterface>(ServicePtr<TArguments>... args)>(
+                    [](ServicePtr<TArguments>... args) -> ServicePtr<TInterface> {
+                        return std::make_shared<TConcrete>(std::forward<ServicePtr<TArguments>>(args)...);
                     }));
         }
         else
@@ -96,10 +95,9 @@ public:
     ServiceContainer* AddTransient()
     {
         _AddTransientServiceFactory(
-            std::function<std::shared_ptr<TInterface>(std::shared_ptr<TArguments>... args)>(
-                [](std::shared_ptr<TArguments>... args) -> std::shared_ptr<TInterface>
-                {
-                    return std::make_shared<TConcrete>(std::forward<std::shared_ptr<TArguments>>(args)...);
+            std::function<ServicePtr<TInterface>(std::shared_ptr<TArguments>... args)>(
+                [](ServicePtr<TArguments>... args) -> ServicePtr<TInterface> {
+                    return std::make_shared<TConcrete>(std::forward<ServicePtr<TArguments>>(args)...);
                 }));
 
         return this;
@@ -118,28 +116,27 @@ private:
     // Low level registration.
     template<typename TInterface, typename... TDependencies>
     void _AddTransientServiceFactory(
-        std::function<std::shared_ptr<TInterface>(std::shared_ptr<TDependencies>... dependencies)> factory)
+        std::function<ServicePtr<TInterface>(ServicePtr<TDependencies>... dependencies)> factory)
     {
         _services[_GetTypeId<TInterface>()] =
-                std::make_shared<ServiceFactory<TInterface>>([=] { return factory(Resolve<TDependencies>()...); });
+            std::make_shared<TransientServiceFactory<TInterface>>([=] { return factory(Resolve<TDependencies>()...); });
     }
 
 
     template<typename TInterface, typename... TDependencies>
     void _AddSingletonServiceFactory(
-        std::function<std::shared_ptr<TInterface>(std::shared_ptr<TDependencies>... dependencies)> factory)
+        std::function<ServicePtr<TInterface>(ServicePtr<TDependencies>... dependencies)> factory)
     {
         _services[_GetTypeId<TInterface>()] =
-                std::make_shared<SingletonServiceFactory<TInterface>>([=]
-                {
-                    return factory(Resolve<TDependencies>()...);
+            std::make_shared<SingletonServiceFactory<TInterface>>([=] {
+            return factory(Resolve<TDependencies>()...);
                 });
     }
 
 private:
     static int _nextTypeId;
 
-    std::map<int, std::shared_ptr<IServiceFactory>> _services;
+    std::map<int, std::shared_ptr<ServiceFactory>> _services;
     bool _lazy;
 };
 

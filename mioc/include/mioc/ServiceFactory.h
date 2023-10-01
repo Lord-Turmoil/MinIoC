@@ -13,42 +13,51 @@
 MIOC_BEGIN
 
 // Abstract representation of service factory.
-class IServiceFactory
+class ServiceFactory
 {
 public:
     // A simple trick to make a class abstract.
-    virtual ~IServiceFactory() = 0;
+    virtual ~ServiceFactory() = 0;
 };
 
 
-inline IServiceFactory::~IServiceFactory() = default;
+inline ServiceFactory::~ServiceFactory() = default;
+
 
 template<typename TService>
-using ServiceProvider = std::function<std::shared_ptr<TService>()>;
+using ServicePtr = std::shared_ptr<TService>;
+
+template<typename TService>
+using ServiceProvider = std::function<ServicePtr<TService>()>;
 
 
 // Transient service factory will create a new instance every time.
 template<typename TService>
-class ServiceFactory : public IServiceFactory
+class TransientServiceFactory : public ServiceFactory
 {
 public:
-    explicit ServiceFactory(const ServiceProvider<TService>& provider)
+    explicit TransientServiceFactory(const ServiceProvider<TService>& provider)
         : _provider(provider)
     {
     }
 
+    explicit TransientServiceFactory(ServiceProvider<TService>&& provider)
+        : _provider(std::move(provider))
+    {
+    }
 
-    ServiceFactory(const ServiceFactory&) = default;
-    ServiceFactory& operator=(const ServiceFactory&) = default;
+
+    TransientServiceFactory(const TransientServiceFactory&) = default;
+    TransientServiceFactory& operator=(const TransientServiceFactory&) = default;
 
 
-    ServiceFactory(ServiceFactory&& other) noexcept
+    TransientServiceFactory(TransientServiceFactory&& other) noexcept
     {
         _provider = std::move(other._provider);
     }
 
 
-    ServiceFactory& operator=(ServiceFactory&& other) noexcept
+    TransientServiceFactory& operator=(TransientServiceFactory&& other) noexcept
     {
         if (this != &other)
         {
@@ -58,7 +67,7 @@ public:
     }
 
 
-    ~ServiceFactory() override = default;
+    ~TransientServiceFactory() override = default;
 
 
     virtual std::shared_ptr<TService> Resolve()
@@ -68,7 +77,7 @@ public:
 
 protected:
     // Used by SingletonServiceFactory when instance is directly provided.
-    ServiceFactory() = default;
+    TransientServiceFactory() = default;
 
 private:
     ServiceProvider<TService> _provider;
@@ -77,17 +86,27 @@ private:
 
 // Singleton service factory will create only one instance.
 template<typename TService>
-class SingletonServiceFactory final : public ServiceFactory<TService>
+class SingletonServiceFactory final : public TransientServiceFactory<TService>
 {
 public:
     explicit SingletonServiceFactory(const ServiceProvider<TService>& provider)
-        : ServiceFactory<TService>(provider)
+        : TransientServiceFactory<TService>(provider)
+    {
+    }
+
+    explicit SingletonServiceFactory(ServiceProvider<TService>&& provider)
+        : TransientServiceFactory<TService>(std::move(provider))
     {
     }
 
 
-    explicit SingletonServiceFactory(std::shared_ptr<TService> instance)
-        : ServiceFactory<TService>()
+    explicit SingletonServiceFactory(const ServicePtr<TService>& instance)
+    {
+        _instance = instance;
+    }
+
+    explicit SingletonServiceFactory(ServicePtr<TService>&& instance)
+        : TransientServiceFactory<TService>()
     {
         _instance = std::move(instance);
     }
@@ -98,7 +117,7 @@ public:
 
 
     SingletonServiceFactory(SingletonServiceFactory&& other) noexcept
-        : ServiceFactory<TService>(std::move(other))
+        : TransientServiceFactory<TService>(std::move(other))
     {
         _instance = std::move(other._instance);
     }
@@ -108,7 +127,7 @@ public:
     {
         if (this != &other)
         {
-            ServiceFactory<TService>::operator=(std::move(other));
+            TransientServiceFactory<TService>::operator=(std::move(other));
             _instance = std::move(other._instance);
         }
         return *this;
@@ -122,14 +141,14 @@ public:
     {
         if (_instance == nullptr)
         {
-            _instance = ServiceFactory<TService>::Resolve();
+            _instance = TransientServiceFactory<TService>::Resolve();
         }
 
         return _instance;
     }
 
 private:
-    std::shared_ptr<TService> _instance;
+    ServicePtr<TService> _instance;
 };
 
 
