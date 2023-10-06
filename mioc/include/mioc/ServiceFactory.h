@@ -151,7 +151,6 @@ private:
     ServicePtr<TService> _instance;
 };
 
-
 MIOC_END
 
-#endif // !_MIOC_SERVICE_FACTORY_H_
+#endif // _MIOC_SERVICE_FACTORY_H_

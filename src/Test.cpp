@@ -1,13 +1,12 @@
 // Copyright (C) 2018 - 2023 Tony's Studio. All rights reserved.
 
+#include <mioc.h>
 #include <memory>
 #include "Test.h"
-#include <mioc.h>
 
 void TestSingleton();
 void TestTransient();
 void TestTransient2();
-
 
 int main()
 {

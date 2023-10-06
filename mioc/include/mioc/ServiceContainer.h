@@ -13,7 +13,6 @@
 
 MIOC_BEGIN
 
-
 class ServiceContainer;
 using ServiceContainerPtr = std::shared_ptr<ServiceContainer>;
 
@@ -140,7 +139,6 @@ private:
     bool _lazy;
 };
 
-
 MIOC_END
 
-#endif // !_MIOC_SERVICE_CONTAINER_H_
+#endif // _MIOC_SERVICE_CONTAINER_H_

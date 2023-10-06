@@ -12,7 +12,6 @@
 
 MIOC_BEGIN
 
-
 class SingletonContainer final
 {
 public:
@@ -34,7 +33,6 @@ private:
     static bool _lazy;
 };
 
-
 MIOC_END
 
-#endif // !_MIOC_SINGLETON_CONTAINER_H_
+#endif // _MIOC_SINGLETON_CONTAINER_H_

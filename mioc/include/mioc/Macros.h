@@ -6,7 +6,7 @@
 #define _MIOC_MACROS_H_
 
 
-#define MIOC_VERSION   "1.1.0"
+#define MIOC_VERSION   "1.1.1"
 #define MIOC_PROJ_NAME "Tony's Mini IoC"
 
 #define MIOC_BEGIN namespace mioc {
@@ -15,4 +15,5 @@
 
 constexpr bool DEFAULT_LAZINESS = true;
 
-#endif // !_MIOC_MACROS_H_
+
+#endif // _MIOC_MACROS_H_
