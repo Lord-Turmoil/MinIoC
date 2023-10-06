@@ -53,10 +53,11 @@ private:
 
 ### 2.2 Create Container
 
+All required header files are included in `mioc.h`, simply include this header file, and you are ready to go!
+
 You can create a container using `ServiceContainer::New()`. In this case, you have to inject this container everywhere you need. You can choose whether to enable lazy initialization for this container **on creation**. You **won't** be able to change it later. By default, lazy initialization is enabled.
 
 ```cpp
-#include "ServiceContainer.h"
 mioc::ServiceContainerPtr lazyContainer = mioc::ServiceContainer::New();
 mioc::ServiceContainerPtr hungryContainer = mioc::ServiceContainer::New(false);
 ```
@@ -64,7 +65,6 @@ mioc::ServiceContainerPtr hungryContainer = mioc::ServiceContainer::New(false);
 Or, you can use `SingletonContainer`, which provides a global-scale singleton container. This container will not be created until the first time you get it. Also, on your first call, you can choose whether to enable lazy initialization for the global container.
 
 ```cpp
-#include "SingletonContainer.h"
 // by default, the global container enables lazy initialization
 mioc::ServiceContainerPtr container = mioc::SingletonContainer::GetContainer();
 // or you can disable it on, and only on the first call
