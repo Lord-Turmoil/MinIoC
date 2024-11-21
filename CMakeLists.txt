@@ -14,7 +14,9 @@ set(LIBRARY_BASE_PATH "${PROJECT_SOURCE_DIR}")
 include_directories("${LIBRARY_BASE_PATH}/include")
 file(GLOB_RECURSE SRC_LIST CONFIGURE_DEPENDS "${LIBRARY_BASE_PATH}/src/*.cpp")
 add_library(${BINARY_NAME} ${SRC_LIST})
-target_include_directories(${BINARY_NAME} PUBLIC ${INCLUDE_DIRECTORIES})
+target_include_directories(${BINARY_NAME} PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
 install (
 	TARGETS ${BINARY_NAME}
