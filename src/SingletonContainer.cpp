@@ -1,6 +1,6 @@
 // Copyright (C) 2023 - 2024 Tony's Studio. All rights reserved.
 
-#include <mioc/SingletonContainer.h>
+#include <mioc/detail/SingletonContainer.h>
 
 MIOC_BEGIN
 

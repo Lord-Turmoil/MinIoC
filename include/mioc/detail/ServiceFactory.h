@@ -5,7 +5,7 @@
 #ifndef _MIOC_SERVICE_FACTORY_H_
 #define _MIOC_SERVICE_FACTORY_H_
 
-#include <mioc/Macros.h>
+#include <mioc/detail/Macros.h>
 
 #include <functional>
 #include <memory>

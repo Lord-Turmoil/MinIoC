@@ -5,7 +5,7 @@
 #ifndef _MIOC_H_
 #define _MIOC_H_
 
-#include <mioc/ServiceContainer.h>
-#include <mioc/SingletonContainer.h>
+#include <mioc/detail/ServiceContainer.h>
+#include <mioc/detail/SingletonContainer.h>
 
 #endif // _MIOC_H_
