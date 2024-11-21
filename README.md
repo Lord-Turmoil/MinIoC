@@ -109,3 +109,6 @@ std::shared_ptr<IC> c = container->Resolve<IC>();
 
 Though this mini IoC container can handle dependency injection, you have to specify all dependencies when you add anything manually. 🥲
 
+## 4. Acknowledgement
+
+This project uses [doctest](https://github.com/doctest/doctest) for unit testing.
