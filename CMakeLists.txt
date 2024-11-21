@@ -5,13 +5,13 @@ set(BINARY_NAME "mioc")
 set(CMAKE_CXX_STANDARD 11)
 
 project(${PROJECT_NAME}
-    VERSION 1.2.0
+    VERSION 1.2.1
     DESCRIPTION "A mini IoC implementation with C++"
     LANGUAGES CXX)
 
 set(LIBRARY_BASE_PATH "${PROJECT_SOURCE_DIR}")
 
-include_directories("${LIBRARY_BASE_PATH}/mioc/include")
+include_directories("${LIBRARY_BASE_PATH}/include")
 file(GLOB_RECURSE SRC_LIST CONFIGURE_DEPENDS "${LIBRARY_BASE_PATH}/src/*.cpp")
 add_library(${BINARY_NAME} ${SRC_LIST})
 target_include_directories(${BINARY_NAME} PUBLIC ${INCLUDE_DIRECTORIES})
