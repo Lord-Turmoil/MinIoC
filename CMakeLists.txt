@@ -1,14 +1,26 @@
-﻿cmake_minimum_required(VERSION 3.26)
-project(MIoC)
+﻿cmake_minimum_required(VERSION 3.14)
 
+set(PROJECT_NAME "mioc")
+set(BINARY_NAME "mioc")
 set(CMAKE_CXX_STANDARD 11)
 
-# Add all source files
-file(GLOB_RECURSE SRC_LIST CONFIGURE_DEPENDS src/*.cpp)
+project(${PROJECT_NAME}
+    VERSION 1.2.0
+    DESCRIPTION "A mini IoC implementation with C++"
+    LANGUAGES CXX)
 
-# Add final target.
-add_executable(${CMAKE_PROJECT_NAME} ${SRC_LIST})
+set(LIBRARY_BASE_PATH "${PROJECT_SOURCE_DIR}")
 
-# dependency
-add_subdirectory(mioc)
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE mioc)
+include_directories("${LIBRARY_BASE_PATH}/mioc/include")
+file(GLOB_RECURSE SRC_LIST CONFIGURE_DEPENDS "${LIBRARY_BASE_PATH}/src/*.cpp")
+add_library(${BINARY_NAME} ${SRC_LIST})
+target_include_directories(${BINARY_NAME} PUBLIC ${INCLUDE_DIRECTORIES})
+
+install (
+	TARGETS ${BINARY_NAME}
+	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+enable_testing()
+add_subdirectory(tests)

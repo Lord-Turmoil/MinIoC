@@ -1,16 +1,12 @@
-// Copyright (C) 2018 - 2023 Tony's Studio. All rights reserved.
-
 #pragma once
 
 #ifndef _MIOC_TEST_H_
 #define _MIOC_TEST_H_
 
-#define _CRT_SECURE_NO_WARNINGS
-
-#include <cstdio>
+#include <iostream>
 #include <memory>
+#include <sstream>
 #include <string>
-
 
 // Class interfaces.
 class IBase
@@ -20,13 +16,11 @@ public:
 
     virtual std::string ToString() = 0;
 
-
     virtual void Print()
     {
-        printf("%s\n", ToString().c_str());
+        std::cout << ToString() << std::endl;
     }
 };
-
 
 class IA : public IBase
 {
@@ -34,13 +28,11 @@ public:
     ~IA() override = default;
 };
 
-
 class IB : public IBase
 {
 public:
     ~IB() override = default;
 };
-
 
 class IC : public IBase
 {
@@ -48,63 +40,55 @@ public:
     ~IC() override = default;
 };
 
-
 // Concrete classes.
 class A : public IA
 {
 public:
     A()
     {
-        printf("A[%p] created.\n", static_cast<void*>(this));
+        std::cout << "A[" << this << "] created." << std::endl;
     }
-
 
     std::string ToString() override
     {
-        char buffer[128];
-        sprintf(buffer, "A[%p]", static_cast<void*>(this));
-        return buffer;
+        std::stringstream ss;
+        ss << "A[" << this << "]";
+        return ss.str();
     }
 };
-
 
 class B : public IB
 {
 public:
     explicit B(const std::shared_ptr<IA>& a) : _a(a)
     {
-        printf("B[%p] created.\n", static_cast<void*>(this));
+        std::cout << "B[" << this << "] created." << std::endl;
     }
-
 
     std::string ToString() override
     {
-        char buffer[128];
-        sprintf(buffer, "B[%p]", static_cast<void*>(this));
-        std::string ret = _a->ToString() + "  " + buffer;
-        return ret;
+        std::stringstream ss;
+        ss << "B[" << this << "]";
+        return ss.str();
     }
 
 private:
     std::shared_ptr<IA> _a;
 };
 
-
 class C : public IC
 {
 public:
     explicit C(const std::shared_ptr<IB>& b) : _b(b)
     {
-        printf("C[%p] created.\n", static_cast<void*>(this));
+        std::cout << "C[" << this << "] created." << std::endl;
     }
-
 
     std::string ToString() override
     {
-        char buffer[128];
-        sprintf(buffer, "C[%p]", static_cast<void*>(this));
-        std::string ret = _b->ToString() + "  " + buffer;
-        return ret;
+        std::stringstream ss;
+        ss << "C[" << this << "]";
+        return ss.str();
     }
 
 private:

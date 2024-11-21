@@ -1,9 +1,8 @@
-// Copyright (C) 2018 - 2023 Tony's Studio. All rights reserved.
+// Copyright (C) 2023 - 2024 Tony's Studio. All rights reserved.
 
 #include <mioc/SingletonContainer.h>
 
 MIOC_BEGIN
-
 
 ServiceContainerPtr SingletonContainer::GetContainer()
 {
@@ -14,16 +13,13 @@ ServiceContainerPtr SingletonContainer::GetContainer()
     return _container;
 }
 
-
 ServiceContainerPtr SingletonContainer::GetContainer(bool lazy)
 {
     _lazy = lazy;
     return GetContainer();
 }
 
-
 std::shared_ptr<ServiceContainer> SingletonContainer::_container;
 bool SingletonContainer::_lazy = DEFAULT_LAZINESS;
-
 
 MIOC_END

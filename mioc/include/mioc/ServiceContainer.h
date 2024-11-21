@@ -1,4 +1,4 @@
-// Copyright (C) 2018 - 2023 Tony's Studio. All rights reserved.
+// Copyright (C) 2023 - 2024 Tony's Studio. All rights reserved.
 
 #pragma once
 
@@ -25,7 +25,6 @@ public:
     {
     }
 
-
     // Any copy of service container is not allowed.
     ServiceContainer(const ServiceContainer&) = delete;
     ServiceContainer(const ServiceContainer&&) = delete;
@@ -40,11 +39,9 @@ public:
         return std::make_shared<ServiceContainer>(lazy);
     }
 
-
     // Resolve registered service.
     // nullptr returned if service not registered.
-    template<typename TService>
-    ServicePtr<TService> Resolve() const
+    template <typename TService> ServicePtr<TService> Resolve() const
     {
         auto typeId = _GetTypeId<TService>();
         auto it = _services.find(typeId);
@@ -56,29 +53,24 @@ public:
         return nullptr;
     }
 
-
     // Register a singleton instance.
     // Will replace old registrations silently.
-    template<typename TInterface>
-    ServiceContainer* AddSingleton(ServicePtr<TInterface> singleton)
+    template <typename TInterface> ServiceContainer* AddSingleton(ServicePtr<TInterface> singleton)
     {
         // std::map::emplace will not replace old value if key already presents.
         _services[_GetTypeId<TInterface>()] = std::make_shared<SingletonServiceFactory<TInterface>>(singleton);
         return this;
     }
 
-
     // Register a singleton by passing arguments to constructor.
-    template<typename TInterface, typename TConcrete, typename... TArguments>
-    ServiceContainer* AddSingleton()
+    template <typename TInterface, typename TConcrete, typename... TArguments> ServiceContainer* AddSingleton()
     {
         if (_lazy)
         {
-            _AddSingletonServiceFactory(
-                std::function<ServicePtr<TInterface>(ServicePtr<TArguments>... args)>(
-                    [](ServicePtr<TArguments>... args) -> ServicePtr<TInterface> {
-                        return std::make_shared<TConcrete>(std::forward<ServicePtr<TArguments>>(args)...);
-                    }));
+            _AddSingletonServiceFactory(std::function<ServicePtr<TInterface>(ServicePtr<TArguments>... args)>(
+                [](ServicePtr<TArguments>... args) -> ServicePtr<TInterface> {
+                    return std::make_shared<TConcrete>(std::forward<ServicePtr<TArguments>>(args)...);
+                }));
         }
         else
         {
@@ -88,32 +80,27 @@ public:
         return this;
     }
 
-
     // Register a transient instance.
-    template<typename TInterface, typename TConcrete, typename... TArguments>
-    ServiceContainer* AddTransient()
+    template <typename TInterface, typename TConcrete, typename... TArguments> ServiceContainer* AddTransient()
     {
-        _AddTransientServiceFactory(
-            std::function<ServicePtr<TInterface>(std::shared_ptr<TArguments>... args)>(
-                [](ServicePtr<TArguments>... args) -> ServicePtr<TInterface> {
-                    return std::make_shared<TConcrete>(std::forward<ServicePtr<TArguments>>(args)...);
-                }));
+        _AddTransientServiceFactory(std::function<ServicePtr<TInterface>(std::shared_ptr<TArguments>... args)>(
+            [](ServicePtr<TArguments>... args) -> ServicePtr<TInterface> {
+                return std::make_shared<TConcrete>(std::forward<ServicePtr<TArguments>>(args)...);
+            }));
 
         return this;
     }
 
 private:
     // Make sure one type is mapped to one id.
-    template<typename TService>
-    static int _GetTypeId()
+    template <typename TService> static int _GetTypeId()
     {
         static int typeId = _nextTypeId++;
         return typeId;
     }
 
-
     // Low level registration.
-    template<typename TInterface, typename... TDependencies>
+    template <typename TInterface, typename... TDependencies>
     void _AddTransientServiceFactory(
         std::function<ServicePtr<TInterface>(ServicePtr<TDependencies>... dependencies)> factory)
     {
@@ -121,15 +108,12 @@ private:
             std::make_shared<TransientServiceFactory<TInterface>>([=] { return factory(Resolve<TDependencies>()...); });
     }
 
-
-    template<typename TInterface, typename... TDependencies>
+    template <typename TInterface, typename... TDependencies>
     void _AddSingletonServiceFactory(
         std::function<ServicePtr<TInterface>(ServicePtr<TDependencies>... dependencies)> factory)
     {
         _services[_GetTypeId<TInterface>()] =
-            std::make_shared<SingletonServiceFactory<TInterface>>([=] {
-            return factory(Resolve<TDependencies>()...);
-                });
+            std::make_shared<SingletonServiceFactory<TInterface>>([=] { return factory(Resolve<TDependencies>()...); });
     }
 
 private:
