@@ -30,7 +30,7 @@ TEST_CASE("Assignment")
 
     // Move container.
     mioc::ServiceContainerPtr containerC = mioc::ServiceContainer::New();
-    *containerC = std::move(*containerA);
+    *containerC = std::move(*containerB);
     CHECK_EQ(containerC->Resolve<IA>()->ToString(), a1->ToString());
     CHECK_EQ(containerC->Resolve<IB>()->ToString(), b1->ToString());
     CHECK_EQ(containerC->Resolve<IC>(), nullptr);

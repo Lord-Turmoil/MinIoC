@@ -5,7 +5,7 @@ set(BINARY_NAME "mioc")
 set(CMAKE_CXX_STANDARD 11)
 
 project(${PROJECT_NAME}
-    VERSION 1.2.1
+    VERSION 1.2.3
     DESCRIPTION "A mini IoC implementation with C++"
     LANGUAGES CXX)
 
