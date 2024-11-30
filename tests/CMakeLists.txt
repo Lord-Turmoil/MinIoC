@@ -1,8 +1,9 @@
-aux_source_directory(. TEST_FILES)
-add_executable(tests ${TEST_FILES})
+set(LIBRARIES mioc)
+set(MIOC_TESTS SingletonTest TransientTest AssignmentTest)
 
-target_include_directories(tests PRIVATE .)
-
-target_link_libraries(tests mioc)
-
-add_test(NAME TestAll COMMAND tests)
+foreach(test ${MIOC_TESTS})
+    add_executable(${test} doctest.cpp ${test}.cpp)
+    target_include_directories(${test} PRIVATE .)
+    target_link_libraries(${test} ${LIBRARIES})
+    add_test(NAME ${test} COMMAND ${test})
+endforeach(test ${MIOC_TESTS})

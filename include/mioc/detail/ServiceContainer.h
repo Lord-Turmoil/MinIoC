@@ -26,10 +26,10 @@ public:
     }
 
     // Any copy of service container is not allowed.
-    ServiceContainer(const ServiceContainer&) = delete;
-    ServiceContainer(const ServiceContainer&&) = delete;
-    ServiceContainer& operator=(const ServiceContainer&) = delete;
-    ServiceContainer& operator=(const ServiceContainer&&) = delete;
+    ServiceContainer(const ServiceContainer& other) = default;
+    ServiceContainer& operator=(const ServiceContainer& other) = default;
+    ServiceContainer(ServiceContainer&& other) noexcept = default;
+    ServiceContainer& operator=(ServiceContainer&& other) noexcept = default;
 
     ~ServiceContainer() = default;
 

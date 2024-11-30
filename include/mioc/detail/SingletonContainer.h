@@ -28,9 +28,6 @@ public:
 private:
     // Prevent instantiation.
     SingletonContainer() = default;
-
-    static std::shared_ptr<ServiceContainer> _container;
-    static bool _lazy;
 };
 
 MIOC_END
