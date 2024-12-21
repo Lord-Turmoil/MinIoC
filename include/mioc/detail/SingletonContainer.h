@@ -2,9 +2,6 @@
 
 #pragma once
 
-#ifndef _MIOC_SINGLETON_CONTAINER_H_
-#define _MIOC_SINGLETON_CONTAINER_H_
-
 #include <mioc/detail/Macros.h>
 #include <mioc/detail/ServiceContainer.h>
 
@@ -22,8 +19,16 @@ public:
 
     ~SingletonContainer() = default;
 
-    static ServiceContainerPtr GetContainer();
-    static ServiceContainerPtr GetContainer(bool lazy);
+    static ServiceContainerPtr GetContainer()
+    {
+        return GetContainer(DEFAULT_LAZINESS);
+    }
+
+    static ServiceContainerPtr GetContainer(bool lazy)
+    {
+        static std::shared_ptr<ServiceContainer> container = ServiceContainer::New(lazy);
+        return container;
+    }
 
 private:
     // Prevent instantiation.
@@ -31,5 +36,3 @@ private:
 };
 
 MIOC_END
-
-#endif // _MIOC_SINGLETON_CONTAINER_H_

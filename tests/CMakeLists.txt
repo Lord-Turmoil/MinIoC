@@ -1,4 +1,8 @@
-set(LIBRARIES mioc)
+# ====================================================================
+# mioc unit tests
+# ====================================================================
+
+set(LIBRARIES ${MIOC_LIB})
 set(MIOC_TESTS SingletonTest TransientTest AssignmentTest)
 
 foreach(test ${MIOC_TESTS})

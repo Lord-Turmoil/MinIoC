@@ -2,9 +2,6 @@
 
 #pragma once
 
-#ifndef _MIOC_SERVICE_CONTAINER_H_
-#define _MIOC_SERVICE_CONTAINER_H_
-
 #include <mioc/detail/Macros.h>
 #include <mioc/detail/ServiceFactory.h>
 
@@ -117,12 +114,10 @@ private:
     }
 
 private:
-    static int _nextTypeId;
+    inline static int _nextTypeId = 75159;
 
     std::map<int, std::shared_ptr<ServiceFactory>> _services;
     bool _lazy;
 };
 
 MIOC_END
-
-#endif // _MIOC_SERVICE_CONTAINER_H_
